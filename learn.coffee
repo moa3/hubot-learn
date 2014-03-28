@@ -11,6 +11,7 @@ learnRegex = (regex_str) ->
 
 findRegex = (msg) -> msg.match[1]
 findResp  = (msg) -> msg.match[2]
+findCond  = (msg) -> msg.match[3]
 
 module.exports = (robot) ->
 
@@ -30,3 +31,11 @@ module.exports = (robot) ->
     robot.hear learnRegex(regex), (msg) ->
       msg.send resp
 
+  robot.respond /learn hear (.+) reply (.+) when (.+)/i, (msg) ->
+    regex = findRegex(msg)
+    resp  = findResp(msg)
+    cond  = findCond(msg)
+
+    msg.send "Learning to hear " + regex
+    robot.hear learnRegex(regex), (msg) ->
+      msg.send resp if eval cond
